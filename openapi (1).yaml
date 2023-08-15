@@ -1,0 +1,48 @@
+openapi: 3.0.0
+info:
+  version: "1.0"
+  title: API Onboardin STD22065
+servers:
+  - url: http://STD22065.com
+paths:
+  /students:
+    get:
+      summary: Récupère les informations d'un étudiant.
+      responses:
+        '200':
+          description: Succès. Renvoie les informations de l'étudiant.
+          content:
+            application/json:
+              example:
+                nom: Nom de l'étudiant
+                prénom: Prénom de l'étudiant
+                STD: Matricule de l'étudiant
+        '500':
+          description: Erreur. Renvoie un message d'erreur.
+
+    post:
+      summary: Ajoute un nouvel étudiant.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                nom:
+                  type: string
+                prénom:
+                  type: string
+                STD:
+                  type: string
+      responses:
+        '200':
+          description: Succès. Renvoie les informations de l'étudiant ajouté.
+          content:
+            application/json:
+              example:
+                nom: Nom de l'étudiant ajouté
+                prénom: Prénom de l'étudiant ajouté
+                STD: Matricule de l'étudiant ajouté
+        '500':
+          description: Erreur. Renvoie un message d'erreur.
