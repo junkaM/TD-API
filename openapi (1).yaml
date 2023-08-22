@@ -1,48 +1,255 @@
-openapi: 3.0.0
+openapi: 3.0.3
 info:
-  version: "1.0"
-  title: API Onboardin STD22065
+  title: API-TD Onboardin STD22065
+  description: API TD
+  version: 1.2.0
 servers:
   - url: http://STD22065.com
-paths:
-  /students:
-    get:
-      summary: Récupère les informations d'un étudiant.
-      responses:
-        '200':
-          description: Succès. Renvoie les informations de l'étudiant.
-          content:
-            application/json:
-              example:
-                nom: Nom de l'étudiant
-                prénom: Prénom de l'étudiant
-                STD: Matricule de l'étudiant
-        '500':
-          description: Erreur. Renvoie un message d'erreur.
 
+tags:
+  - name: enseignant
+    description: Opérations concernant les enseignants
+  - name: étudiants
+    description: Opérations concernant les étudiants
+    
+paths:
+  /enseignant:
     post:
-      summary: Ajoute un nouvel étudiant.
+      tags:
+        - enseignant
+      summary: Créer un enseignant
+      description: Cela ne peut être fait que par l'enseignant connecté.
+      operationId: createEnseignant
       requestBody:
-        required: true
+        description: Objet enseignant créé
         content:
           application/json:
             schema:
-              type: object
-              properties:
-                nom:
-                  type: string
-                prénom:
-                  type: string
-                STD:
-                  type: string
+              $ref: '#/components/schemas/Enseignant'
+          application/xml:
+            schema:
+              $ref: '#/components/schemas/Enseignant'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Enseignant'
       responses:
-        '200':
-          description: Succès. Renvoie les informations de l'étudiant ajouté.
+        default:
+          description: Opération réussie
           content:
             application/json:
-              example:
-                nom: Nom de l'étudiant ajouté
-                prénom: Prénom de l'étudiant ajouté
-                STD: Matricule de l'étudiant ajouté
-        '500':
-          description: Erreur. Renvoie un message d'erreur.
+              schema:
+                $ref: '#/components/schemas/Enseignant'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/Enseignant'
+  
+  /enseignant/{Toky}:
+    get:
+      tags:
+        - enseignant
+      summary: Obtenir un enseignant par son nom d'enseignant
+      description: ''
+      operationId: getEnseignantParNom
+      parameters:
+        - name: Toky
+          in: path
+          description: 'Le nom qui doit être récupéré. Utilisez enseignant1 pour les tests. '
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Opération réussie
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Enseignant'          
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/Enseignant'
+        '400':
+          description: Nom d'enseignant non valide
+        '404':
+          description: Enseignant non trouvé
+
+  /etudiants:
+    post:
+      tags:
+        - étudiants
+      summary: Créer des étudiants
+      requestBody:
+        description: Objet étudiants créé
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Etudiant'
+          application/xml:
+            schema:
+              $ref: '#/components/schemas/Etudiant'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Etudiant'
+      responses:
+        default:
+          description: Opération réussie
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Etudiant'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/Etudiant'
+  
+  /etudiants/{Mikanto}:
+    get:
+      tags:
+        - étudiants
+      summary: Obtenir des étudiants par leur nom d'étudiants
+      description: ''
+      operationId: getEtudiantsParNom
+      parameters:
+        - name: Mikanto
+          in: path
+          description: 'Le nom qui doit être récupéré. Utilisez ce nom pour les tests. '
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Opération réussie
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Etudiant'          
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/Etudiant'
+        '400':
+          description: Nom d'étudiants non valide
+        '404':
+          description: Étudiants non trouvés
+    put:
+      tags:
+        - étudiants
+      summary: Mettre à jour des étudiants
+      description: Cela ne peut être fait que par les étudiants connectés.
+      operationId: updateEtudiants
+      parameters:
+        - name: Mikanto
+          in: path
+          description: Nom à mettre à jour
+          required: true
+          schema:
+            type: string
+      requestBody:
+        description: Mettre à jour un étudiant existant dans le magasin
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Etudiant'
+          application/xml:
+            schema:
+              $ref: '#/components/schemas/Etudiant'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Etudiant'
+      responses:
+        default:
+          description: Opération réussie
+    delete:
+      tags:
+        - étudiants
+      summary: Supprimer des étudiants
+      description: Cela ne peut être fait que par les étudiants connectés.
+      operationId: deleteEtudiants
+      parameters:
+        - name: Mikanto
+          in: path
+          description: Le nom qui doit être supprimé
+          required: true
+          schema:
+            type: string
+      responses:
+        '400':
+          description: Nom d'étudiants non valide
+        '404':
+          description: Étudiants non trouvés
+  
+  
+components:
+  schemas:
+    Enseignant:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          example: 01
+        nomEnseignant:
+          type: string
+          example: Tokimahery 
+        prenom:
+          type: string
+          example: Ramarozaka
+        nom:
+          type: string
+          example: Toky
+        email:
+          type: string
+          example: toky@hei.school
+        motDePasse:
+          type: string
+          example: 'azerty123'
+        telephone:
+          type: string
+          example: '034 65 656 65'
+        statutEnseignant:
+          type: string
+          description: Statut de l'enseignant
+          format: int32
+          example: 'Enseignant'
+        matieresEnseignees:  
+          type: array
+          items:
+            type: string
+            example: '[ - PROG1, - PROG2,  - Web1]'
+             
+              
+      xml:
+        name: enseignant
+        
+    Etudiant:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          example: 22065
+        prenom:
+            type: string
+            format: int64
+            example: Mikanto
+        nom:
+          type: string
+          example: Idealy
+        dateDeNaissance: 
+            type: string
+            format: date
+            example: 12-02-07
+        adresse:
+          type: string
+          example: Ivandry
+        ecole:
+          type: string
+          example: HEI
+        email:
+          type: string
+          example: hei.mikanto@example.com
+        motDePasse:
+          type: string
+          example: 'mikantoI123'
+        telephone:
+          type: string
+          example: '034 43 737 28'   
+      xml:
+        name: etudiant
